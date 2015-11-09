@@ -39,7 +39,6 @@ if ($client->getAccessToken()) {
     if(isset($email)){
         $getres=mysqli_query($con,"SELECT * FROM users where email='$email'");
         if($getres){
-
             $res=mysqli_num_rows($getres);
             $isNewUser = ($res != 1);
         }
@@ -113,6 +112,9 @@ else {
     $( "#learn" ).autocomplete({
       source: subject
     });
+    $( "#teach" ).autocomplete({
+      source: subject
+    });
   });
   </script>
 
@@ -136,7 +138,7 @@ else {
     line-height:15px;
     margin: 2px 6px 16px 0px;
   }
-  input[type="submit"]{
+  button{
      background: #E27575;
     border: none;
     padding: 10px 25px 10px 25px;
@@ -189,9 +191,10 @@ else {
         ?>
           <div class='animated fadeInUp' id='loginpg' style='z-index:99;position:relative;left:4%;'>
             <h2 class='style-1' style='color:white;position:relative;left:27%;'>Now share about yourself and find your tutor in no time! </h2>
-            <form method='post' action='register.php'>
-              <input type='hidden' name='email' value='<?php echo $email; ?>' />
-              <input type='hidden' name='cords' id='cords' value='51.508742,-0.120850'/>
+            <form id="form"  name="send" onsubmit="return dummy();">
+              <input type='hidden' name='email' id='email' value='<?php echo $email; ?>' />
+              <input type='hidden' name='lat' id='lat' />
+              <input type='hidden' name='lng' id='lng' />
               <div class='col-md-4'>
                 <h3 style='color:white;'>Username:</h3>
                 <input type='text' class='focus' name='username' placeholder='Username' id='username' onblur='checkreq()' style='color:black'/><br>
@@ -205,7 +208,7 @@ else {
                 <input type='text' class='focus' name='teach' id='teach' placeholder='eg: Botany, Zoology' style='color:black'/><br>
               </div>
               <div class='col-md-12'>
-                <input type='submit' value='Add my profile' style='width:500px; left:27%; position: relative; top : 30px;'/>
+                <button type='submit' style='width:500px; left:27%; position: relative; top : 30px;' onclick="register()">Add my profile</button>
               </div>
             </form></div>
 
@@ -215,19 +218,19 @@ else {
           }
         }
           ?>
-        <div id="reg_status" style="position:relative;top:24%;left:45%"></div>
+        <div id="reg_status" style="position:relative;top:-30px;left:45%;"></div>
       </section>
     </header>
 
 
-    <section class="screenshots-intro">
+    <section id="showMap">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
             <div id="google_canvas"></div>
             <h1>Get in touch with your tutor</h1>
-            <p>The map shows all the tutors who are near to you. You can click on it, and get in touch with them instantly! <br> To filter your search, you can specify the name of the subject below.</p>
-            <p>Filter the search :</p><input type="text" name="subject" style="width:300px;" placeholder="eg : Physics"/>
+            <p>The map shows all the tutors who are near to you. You can click on it, and get in touch with them instantly!</p>
+        <!--    <p>Filter the search :</p><input type="text" name="subject" style="width:300px;" placeholder="eg : Physics"/>   -->
 
           </div>
         </div>
@@ -269,33 +272,70 @@ else {
 <!--Maps-->
 
 
-   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+   <script type="text/javascript" src="http://maps.google.com/maps/api/js"></script>
 
     <script>
 
 function initialize() {
+  var map;
+ var bounds = new google.maps.LatLngBounds();
+ var mapOptions = {
+   zoom:12,
+   mapTypeId:google.maps.MapTypeId.ROADMAP,
+   mapTypeControl:false,
+   scaleControl:false,
+   rotateControl:true,
+   scrollwheel:false
+ };
 
-  var mycenter = new google.maps.LatLng(51.508742,-0.120850);
-  var mapProp = {
-    center:mycenter,
-    zoom:12,
-    mapTypeId:google.maps.MapTypeId.ROADMAP,
-    mapTypeControl:false,
-    scaleControl:false,
-    rotateControl:true,
-    scrollwheel:false
-  };
-  var map=new google.maps.Map(document.getElementById("google_canvas"),mapProp);
-var marker=new google.maps.Marker({
-  position:mycenter,
-  });
+ // Display a map on the page
+ map = new google.maps.Map(document.getElementById("google_canvas"), mapOptions);
+  //multiple markers
+  var markers = [
+         ['London Eye, London', 51.503454,-0.119562],
+         ['Palace of Westminster, London', 51.499633,-0.124755]
+     ];
+  //marker contents
+  var infoWindowContent = [
+        ['<div class="info_content">' +
+        '<h3>Can learn from you!</h3>' +
+        '<h4>Name:</h4>' +
+        '<h4>Email:</h4>' +
+        '<h4>Subject:</h4>'  +
+        '</div>'],
+        ['<div class="info_content">' +
+        '<h3>Can teach you!</h3>' +
+        '<h4>Name:</h4>' +
+        '<h4>Email:</h4>' +
+        '<h4>Subject:</h4>' +
+        '</div>']
+    ];
+    // Display multiple markers on a map
+    var infoWindow = new google.maps.InfoWindow(), marker, i;
+    // Loop through our array of markers & place each one on the map
+        for( i = 0; i < markers.length; i++ ) {
+            var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+            bounds.extend(position);
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: markers[i][0]
+            });
+      // Allow each marker to have an info window
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+          infoWindow.setContent(infoWindowContent[i][0]);
+          infoWindow.open(map, marker);
+      }
+  })(marker, i));
+  map.fitBounds(bounds);
 
-marker.setMap(map);
+}
 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
-if(document.getElementById("cords")){
+if(document.getElementById("lat")){
    if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
     } else {
@@ -303,9 +343,10 @@ if(document.getElementById("cords")){
     }
 
 function showPosition(position) {
-  console.log('showPosition');
-    var latlon = position.coords.latitude + "," + position.coords.longitude;
-    document.getElementById("cords").value=latlon;
+    var lat = position.coords.latitude;
+      var long = position.coords.longitude;
+    document.getElementById("lat").value=lat;
+    document.getElementById("lng").value=long;
 }
 
 function showError(error) {

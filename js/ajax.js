@@ -8,6 +8,10 @@ var ajaxRequest;
 	  ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP");
   }
 
+  function dummy(){
+  	return false;
+  }
+
 function checkreq()
 {
 var uname = document.getElementById('username').value;
@@ -29,14 +33,16 @@ function register()
 		var uname=document.getElementById('username').value;
 		var learn=document.getElementById('learn').value;
 		var teach=document.getElementById('teach').value;
-		var mail=document.getElementById('emailid').value;
-		var cords=document.getElementById('cords').value;
-		var query="?un="+uname+"&l="+learn+"&t="+teach+"&m="+mail+"&c="+cords;
+		var mail=document.getElementById('email').value;
+		var lat=document.getElementById('lat').value;
+		var lng=document.getElementById('lng').value;
+		var query="?uname="+uname+"&learn="+learn+"&teach="+teach+"&email="+mail+"&lat="+lat+"&lng="+lng;
 
 		ajaxRequest.onreadystatechange = function(){
 		 if(ajaxRequest.readyState == 4){
 					var ajaxDisplay = document.getElementById('loginpg');
 					ajaxDisplay.innerHTML = ajaxRequest.responseText;
+          window.location.replace('index.php#showMap');
 			}
 		}
 		ajaxRequest.open("GET", "../google_login_oauth/register.php" + query, true);
