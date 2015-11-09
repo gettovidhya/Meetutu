@@ -81,7 +81,7 @@ else {
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-    <script src="../js/jquery-1.9.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
     <script src="../js/ajax.js" type="text/javascript"></script>
 <script>
@@ -249,7 +249,6 @@ else {
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/min/toucheffects-min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="../js/flickity.pkgd.min.js"></script>
     <script src="../js/jquery.fancybox.pack.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
