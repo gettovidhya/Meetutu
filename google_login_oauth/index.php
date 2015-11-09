@@ -71,8 +71,8 @@ else {
     <link href="../css/jquery.fancybox.css" rel="stylesheet">
     <link href="../css/flickity.css" rel="stylesheet" >
     <link href="../css/animate.css" rel="stylesheet">
-    <link href="../http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='../http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
     <link href="../css/styles.css" rel="stylesheet">
     <link href="../css/queries.css" rel="stylesheet">
 
@@ -80,11 +80,10 @@ else {
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script src="../js/ajax.js" type="text/javascript"></script>
-
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
     <script src="../js/jquery-1.9.1.js"></script>
-    <script src="../js/jquery-ui-1.10.3.custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+    <script src="../js/ajax.js" type="text/javascript"></script>
 <script>
   $(function() {
     var subject = [
@@ -161,9 +160,9 @@ else {
         <div class="container">
           <div class="row nav-wrapper">
             <div class="col-md-6 col-sm-6 col-xs-6 text-left">
-              <a href="#"><img src="img/logo-white.png" alt="Boxify Logo"></a>
+              <a href="#"><img src="../img/logo-white.png" alt="Boxify Logo"></a>
             </div>
-            
+
           </div>
           <div class="row hero-content">
             <div class="col-md-12" class="style-1 clearfix">
@@ -219,8 +218,8 @@ else {
         <div id="reg_status" style="position:relative;top:24%;left:45%"></div>
       </section>
     </header>
-    
-    
+
+
     <section class="screenshots-intro">
       <div class="container">
         <div class="row">
@@ -229,25 +228,25 @@ else {
             <h1>Get in touch with your tutor</h1>
             <p>The map shows all the tutors who are near to you. You can click on it, and get in touch with them instantly! <br> To filter your search, you can specify the name of the subject below.</p>
             <p>Filter the search :</p><input type="text" name="subject" style="width:300px;" placeholder="eg : Physics"/>
-            
+
           </div>
         </div>
       </div>
     </section>
-    
+
     <footer>
       <div class="container">
         <div class="row">
           <div class="col-md-5">
             <h1 class="footer-logo">
-            <img src="img/logo-blue.png" alt="Footer Logo Blue">
+            <img src="../img/logo-blue.png" alt="Footer Logo Blue">
             </h1>
             <p>© Shri Vidhya</p>
           </div>
         </div>
       </div>
     </footer>
-    
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="../js/min/toucheffects-min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -267,15 +266,14 @@ else {
     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
     ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
-  
+
 <!--Maps-->
 
-  
-   <script type="text/javascript" 
-           src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script>
-    
+
 function initialize() {
 
   var mycenter = new google.maps.LatLng(51.508742,-0.120850);
@@ -285,7 +283,7 @@ function initialize() {
     mapTypeId:google.maps.MapTypeId.ROADMAP,
     mapTypeControl:false,
     scaleControl:false,
-    rotateControl:true,    
+    rotateControl:true,
     scrollwheel:false
   };
   var map=new google.maps.Map(document.getElementById("google_canvas"),mapProp);
@@ -298,19 +296,21 @@ marker.setMap(map);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
-
+if(document.getElementById("cords")){
    if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else { 
+    } else {
         console.log( "Geolocation is not supported by this browser.");
     }
 
 function showPosition(position) {
+  console.log('showPosition');
     var latlon = position.coords.latitude + "," + position.coords.longitude;
     document.getElementById("cords").value=latlon;
 }
 
 function showError(error) {
+  console.log('showError');
     switch(error.code) {
         case error.PERMISSION_DENIED:
             console.log("User denied the request for Geolocation.");
@@ -326,7 +326,7 @@ function showError(error) {
             break;
     }
 }
-
+}
 </script>
     <!-- Google maps -->
 
