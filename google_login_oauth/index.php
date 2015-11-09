@@ -49,12 +49,6 @@ else {
   $authUrl = $client->createAuthUrl();
 }
 
-if(isset($authUrl)) {
-   print  "<a class='login animated fadeInUp' id='login' href='$authUrl' style='top:50%;left:40%;position:absolute;z-index:99;'><img src='images/googleconnect3.png' style='height:6%;width:50%;'/></a>";
-
-} else {
-   print "<a class='logout' href='?logout' style='color:white'> <div class='learn-btn text-right navicon' style='top:7%;right:4%;position:absolute;z-index:99;line-height: 0.42857143;'>LOGOUT</div></a>";
- }
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -178,24 +172,37 @@ if(isset($authUrl)) {
           </div>
         </div>
         <?php
-          if($isNewUser) {
+          if(isset($authUrl)) {
         ?>
-          <div class='animated fadeInUp' id='loginpg' style='top:47%;left:7%;position:absolute;z-index:99;'>
-            <h1 class='style-1' style='color:white;left:20%;position:relative;'> Now share about yourself and find your tutor in no time! </h1>
+            <a class='login animated fadeInUp' id='login' href='<?php echo $authUrl; ?>' style='top:50%;left:40%;position:relative;z-index:99;'>
+              <img src='images/googleconnect3.png' style='height:6%;width:20%;'/>
+            </a>
+        <?php
+          } else {
+        ?>
+            <a class='logout' href='?logout' style='color:white'>
+              <div class='learn-btn text-right navicon' style='top:7%;right:4%;position:absolute;z-index:99;line-height: 0.42857143;'>LOGOUT</div>
+            </a>
+        <?php
+          }
+          if(isset($isNewUser)) {
+            if($isNewUser) {
+        ?>
+          <div class='animated fadeInUp' id='loginpg' style='z-index:99;position:relative;left:4%;'>
+            <h2 class='style-1' style='color:white;position:relative;left:27%;'>Now share about yourself and find your tutor in no time! </h2>
             <form method='post' action='register.php'>
-              <br>
-              <input type='hidden' name='email' value='$email' />
+              <input type='hidden' name='email' value='<?php echo $email; ?>' />
               <input type='hidden' name='cords' id='cords' value='51.508742,-0.120850'/>
               <div class='col-md-4'>
-                <h1 style='color:white;'>Username:</h1>
+                <h3 style='color:white;'>Username:</h3>
                 <input type='text' class='focus' name='username' placeholder='Username' id='username' onblur='checkreq()' style='color:black'/><br>
               </div>
               <div class='col-md-4'>
-                <h1 style='color:white;'>Subjects you wish to learn:</h1>
+                <h3 style='color:white;'>Subjects you wish to learn:</h3>
                 <input type='text' class='focus' name='learn' id='learn' placeholder='eg: Maths, Physics' style='color:black'/><br>
               </div>
               <div class='col-md-4'>
-                <h1 style='color:white;'>Subjects you can teach:</h1>
+                <h3 style='color:white;'>Subjects you can teach:</h3>
                 <input type='text' class='focus' name='teach' id='teach' placeholder='eg: Botany, Zoology' style='color:black'/><br>
               </div>
               <div class='col-md-12'>
@@ -204,8 +211,11 @@ if(isset($authUrl)) {
             </form></div>
 
           <?php } else { ?>
-              <a href='#google_canvas' style='position:absolute;left:40%;top:50%;z-index:99;' class='learn-btn animated fadeInUp'>Find Your Tutor<i class='fa fa-arrow-down'></i></a>
-          <?php } ?>
+              <a href='#google_canvas' style='position:relative;left:42%;top:5%;z-index:99;' class='learn-btn animated fadeInUp'>Find Your Tutor<i class='fa fa-arrow-down'></i></a>
+          <?php
+          }
+        }
+          ?>
         <div id="reg_status" style="position:relative;top:24%;left:45%"></div>
       </section>
     </header>

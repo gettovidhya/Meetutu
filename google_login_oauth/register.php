@@ -18,10 +18,9 @@ else{
 $id = $numrows+1;
 $res=mysqli_query($con,"INSERT INTO users(id,username,email,learn,teach) VALUES('$id','$username','$email','$learn','$teach')");
 if($res){
-print '<h1>jhi</h1>';
 }
 else {
-	print '<h1>noo</h1>';
+	print '<h1>Please try again!</h1>';
 }
 mysqli_close($con);
 ?>
