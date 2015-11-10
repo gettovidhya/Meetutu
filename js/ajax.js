@@ -1,13 +1,9 @@
-var ajaxRequest;
-  if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	ajaxRequest=new XMLHttpRequest();
-  }
-  else
-  {// code for IE6, IE5
-	  ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-
+$(document).ready(function(){
+  $.get("../google_login_oauth/retrieve.php", function(data) {
+    var obj = JSON.parse(data)
+    initialize(obj);
+  })
+});
   function dummy(){
   	return false;
   }
@@ -42,6 +38,7 @@ function register()
 		 if(ajaxRequest.readyState == 4){
 					var ajaxDisplay = document.getElementById('loginpg');
 					ajaxDisplay.innerHTML = ajaxRequest.responseText;
+          alert('Thanks for registering!');
           window.location.replace('index.php#showMap');
 			}
 		}
