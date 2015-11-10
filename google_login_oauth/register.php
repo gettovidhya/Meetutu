@@ -9,7 +9,22 @@ $lat=isset($_GET['lat'])?$_GET['lat']:'';
 $lng=isset($_GET['lng'])?$_GET['lng']:'';
 $username=isset($_GET['uname'])?$_GET['uname']:'';
 $learn=isset($_GET['learn'])?$_GET['learn']:'';
+$learn_exp = explode(',',$learn);
+foreach($learn_exp as $learn_exp){
+	$ins=mysqli_query($con,"INSERT INTO interest(email,learn) VALUES('$email','$learn_exp')");
+	if(!$ins){
+		print 'Error inserting values in interest';
+	}
+}
 $teach=isset($_GET['teach'])?$_GET['teach']:'';
+$teach_exp = explode(',',$teach);
+print $learn_exp;
+foreach($teach_exp as $teach_exp){
+$ins=mysqli_query($con,"INSERT INTO pro(email,teach) VALUES('$email','$teach_exp')");
+	if(!$ins){
+		print 'Error inserting values in pro';
+	}
+}
 $sno=mysqli_query($con,"select * from users");
 if($sno){
 	$numrows= mysqli_num_rows($sno);
@@ -26,9 +41,3 @@ else {
 }
 mysqli_close($con);
 ?>
-
-<script>
-location.replace("index.php");
-alert("Form successfully created");
-
- </script>
