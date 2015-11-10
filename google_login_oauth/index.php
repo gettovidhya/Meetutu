@@ -23,33 +23,38 @@ if (isset($_SESSION['token'])) {
 }
 if (isset($_REQUEST['logout'])) {
   unset($_SESSION['token']);
+  unset($_SESSION['user']);
   $client->revokeToken();
 }
-if ($client->getAccessToken()) {
-      $user = $oauth2->userinfo->get();
-    //  print_r($user);
-    //  $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
-    //  $img = filter_var($user['picture'], FILTER_VALIDATE_URL);
-      $content = $user;
-      $_SESSION['token'] = $client->getAccessToken();
+
+if(!isset($_SESSION['user'])){
+  if ($client->getAccessToken()) {
+        $user = $oauth2->userinfo->get();
+        $_SESSION['user'] = $user;
+      //  print_r($user);
+      //  $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+      //  $img = filter_var($user['picture'], FILTER_VALIDATE_URL);
+        $content = $user;
+        $_SESSION['token'] = $client->getAccessToken();
 
 
 
-    $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
-    if(isset($email)){
-        $getres=mysqli_query($con,"SELECT * FROM users where email='$email'");
-        if($getres){
-            $res=mysqli_num_rows($getres);
-            $isNewUser = ($res != 1);
-        }
-    }
-}
-else {
-  $authUrl = $client->createAuthUrl();
+      $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+      if(isset($email)){
+          $getres=mysqli_query($con,"SELECT * FROM users where email='$email'");
+          if($getres){
+              $res=mysqli_num_rows($getres);
+              $isNewUser = ($res != 1);
+
+          }
+      }
+  }
+  else {
+    $authUrl = $client->createAuthUrl();
+  }
 }
 
 ?>
-<!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -70,8 +75,8 @@ else {
     <link href="../css/jquery.fancybox.css" rel="stylesheet">
     <link href="../css/flickity.css" rel="stylesheet" >
     <link href="../css/animate.css" rel="stylesheet">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> -->
+    <!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
     <link href="../css/styles.css" rel="stylesheet">
     <link href="../css/queries.css" rel="stylesheet">
 
@@ -80,8 +85,8 @@ else {
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link href="../css/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+    <script src="../js/jquery-1.9.1.js"></script>
+    <script src="../js/jquery-ui-1.10.3.custom.js"></script>
     <script src="../js/ajax.js" type="text/javascript"></script>
 <script>
   $(function() {
@@ -151,7 +156,6 @@ else {
 </style>
   </head>
   <body>
-
   <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -215,6 +219,7 @@ else {
           <?php } else { ?>
               <a href='#google_canvas' style='position:relative;left:42%;top:5%;z-index:99;' class='learn-btn animated fadeInUp'>Find Your Tutor<i class='fa fa-arrow-down'></i></a>
           <?php
+
           }
         }
           ?>
@@ -260,26 +265,26 @@ else {
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/min/scripts-min.js"></script>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <script>
+    <!-- <script>
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
     e.src='//www.google-analytics.com/analytics.js';
     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
     ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
+    </script> -->
+
+
 
 <!--Maps-->
-
-
    <script type="text/javascript" src="http://maps.google.com/maps/api/js"></script>
 
     <script>
 
-function initialize() {
+function initialize(obj) {
   var map;
- var bounds = new google.maps.LatLngBounds();
- var mapOptions = {
+  var bounds = new google.maps.LatLngBounds();
+  var mapOptions = {
    zoom:12,
    mapTypeId:google.maps.MapTypeId.ROADMAP,
    mapTypeControl:false,
@@ -291,25 +296,25 @@ function initialize() {
  // Display a map on the page
  map = new google.maps.Map(document.getElementById("google_canvas"), mapOptions);
   //multiple markers
-  var markers = [
-         ['London Eye, London', 51.503454,-0.119562],
-         ['Palace of Westminster, London', 51.499633,-0.124755]
-     ];
+  var markers = obj.teach.map(function(teacher){return ['Can teach you!',teacher.lat,teacher.lng]});
+
+
+  //var markers = [
+    // console.log(obj);
+    //      ['London Eye, London', 51.503454,-0.119562],
+    //      ['Palace of Westminster, London', 51.499633,-0.124755]
+    //  ];
   //marker contents
-  var infoWindowContent = [
-        ['<div class="info_content">' +
-        '<h3>Can learn from you!</h3>' +
-        '<h4>Name:</h4>' +
-        '<h4>Email:</h4>' +
-        '<h4>Subject:</h4>'  +
-        '</div>'],
-        ['<div class="info_content">' +
-        '<h3>Can teach you!</h3>' +
-        '<h4>Name:</h4>' +
-        '<h4>Email:</h4>' +
-        '<h4>Subject:</h4>' +
-        '</div>']
-    ];
+  var infoWindowContent = obj.teach.map(function(Infocontent){
+    return [
+      '<div class="info_content">' +
+      '<h3>Can teach you '+Infocontent.teach+'</h3>' +
+      '<h4>Name:'+Infocontent.username+'</h4>'+
+      '<h4>Email:'+Infocontent.email+'</h4>'+
+      '</div>'
+    ]
+  });
+
     // Display multiple markers on a map
     var infoWindow = new google.maps.InfoWindow(), marker, i;
     // Loop through our array of markers & place each one on the map
@@ -333,7 +338,6 @@ function initialize() {
 }
 
 }
-google.maps.event.addDomListener(window, 'load', initialize);
 
 if(document.getElementById("lat")){
    if (navigator.geolocation) {
@@ -368,7 +372,7 @@ function showError(error) {
 }
 }
 </script>
-    <!-- Google maps -->
+    <!-- Google maps ends-->
 
 
 
